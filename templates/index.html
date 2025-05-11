@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escala de Trabalho</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            background-color: #dc3545;
+            color: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-bottom: 5px solid #000;
+        }
+        .folga {
+            background-color: #ffc107;
+            color: #000;
+            font-weight: bold;
+        }
+        .trabalho {
+            background-color: #28a745;
+            color: white;
+            font-weight: bold;
+        }
+        .card {
+            margin-bottom: 30px;
+            border: 2px solid #dc3545;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .card-header {
+            background-color: #dc3545;
+            color: white;
+            font-weight: bold;
+            padding: 15px;
+        }
+        .btn-custom {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .btn-custom:hover {
+            background-color: #c82333;
+            color: white;
+        }
+        .form-check-input:checked {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+        table th {
+            background-color: #dc3545 !important;
+            color: white !important;
+            text-align: center;
+            vertical-align: middle;
+        }
+        td {
+            text-align: center;
+            vertical-align: middle;
+        }
+        .badge-horario {
+            font-size: 0.8em;
+            background-color: #6c757d;
+            color: white;
+            padding: 5px 8px;
+        }
+        .dia-semana {
+            font-size: 0.8em;
+            color: #6c757d;
+            display: block;
+        }
+        .atividade {
+            font-weight: bold;
+            color: #343a40;
+        }
+        .semana-separator {
+            border-bottom: 3px solid #dc3545;
+        }
+        .bg-info {
+            background-color: #17a2b8 !important;
+        }
+        .text-info {
+            color: #17a2b8 !important;
+        }
+        .cobertura-table th {
+            background-color: #17a2b8 !important;
+        }
+        .config-horario {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .periodo-disponivel {
+            background-color: #d4edda;
+            padding: 3px 6px;
+            border-radius: 3px;
+            display: inline-block;
+            margin: 2px 0;
+        }
+        .periodo-almoco {
+            background-color: #fff3cd;
+            padding: 3px 6px;
+            border-radius: 3px;
+            display: inline-block;
+            margin: 2px 0;
+        }
+        .sem-cobertura {
+            background-color: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .table-cobertura {
+            font-size: 0.9em;
+        }
+        .table-cobertura th {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1 class="text-center">Escala de Trabalho - {{ nome_mes }}/{{ year }}</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <form method="POST">
+            <!-- Seção de Folgas -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="mb-0">Selecione os dias de folga</h2>
+                </div>
+                <div class="card-body">
+                    <h3 class="text-danger">Analistas</h3>
+                    {% for analista in analistas %}
+                        <div class="mb-4">
+                            <h4 class="mb-3">{{ analista.nome }}</h4>
+                            <div class="d-flex flex-wrap">
+                                {% for dia in dias_com_semana %}
+                                    <div class="form-check me-3 mb-2">
+                                        <input class="form-check-input" type="checkbox"
+                                               id="folga_analista_{{ analista.nome }}_{{ dia.dia }}"
+                                               name="folga_analista_{{ analista.nome }}_{{ dia.dia }}"
+                                               {% if dia.dia in folgas_analistas[analista.nome] %}checked{% endif %}>
+                                        <label class="form-check-label" for="folga_analista_{{ analista.nome }}_{{ dia.dia }}">
+                                            {{ dia.dia }} ({{ dia.dia_semana }})
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <hr>
+                    {% endfor %}
+
+                    <h3 class="text-danger mt-5">Técnicos</h3>
+                    {% for tecnico in tecnicos %}
+                        <div class="mb-4">
+                            <h4 class="mb-3">{{ tecnico.nome }} - {{ tecnico.atividade }}</h4>
+                            <div class="d-flex flex-wrap">
+                                {% for dia in dias_com_semana %}
+                                    <div class="form-check me-3 mb-2">
+                                        <input class="form-check-input" type="checkbox"
+                                               id="folga_tecnico_{{ tecnico.nome }}_{{ dia.dia }}"
+                                               name="folga_tecnico_{{ tecnico.nome }}_{{ dia.dia }}"
+                                               {% if dia.dia in folgas_tecnicos[tecnico.nome] %}checked{% endif %}>
+                                        <label class="form-check-label" for="folga_tecnico_{{ tecnico.nome }}_{{ dia.dia }}">
+                                            {{ dia.dia }} ({{ dia.dia_semana }})
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <hr>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Configuração de Horários -->
+            <div class="card mt-4">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Configurar Horários</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3 class="text-primary">Analistas</h3>
+                            {% for analista in analistas %}
+                                <div class="config-horario">
+                                    <h5>{{ analista.nome }}</h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Entrada</label>
+                                            <input type="time" class="form-control"
+                                                   name="entrada_analista_{{ analista.nome }}"
+                                                   value="{{ analista.entrada }}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Saída</label>
+                                            <input type="time" class="form-control"
+                                                   name="saida_analista_{{ analista.nome }}"
+                                                   value="{{ analista.saida }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <h3 class="text-primary">Técnicos</h3>
+                            {% for tecnico in tecnicos %}
+                                <div class="config-horario">
+                                    <h5>{{ tecnico.nome }} <small class="text-muted">{{ tecnico.atividade }}</small></h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Entrada</label>
+                                            <input type="time" class="form-control"
+                                                   name="entrada_tecnico_{{ tecnico.nome }}"
+                                                   value="{{ tecnico.entrada }}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Saída</label>
+                                            <input type="time" class="form-control"
+                                                   name="saida_tecnico_{{ tecnico.nome }}"
+                                                   value="{{ tecnico.saida }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" name="limpar" value="true" class="btn btn-dark me-2">
+                    Limpar Tudo
+                </button>
+                <button type="submit" class="btn btn-custom">
+                    Salvar Configurações
+                </button>
+            </div>
+        </form>
+
+        <!-- Escala Analistas -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2 class="mb-0">Escala Analistas</h2>
+            </div>
+            <div class="card-body">
+                {% for semana in semanas %}
+                    <div class="table-responsive mb-4">
+                        <h4 class="text-danger mb-3">Semana {{ loop.index }}</h4>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Entrada</th>
+                                    {% for dia in semana %}
+                                        <th>
+                                            {{ dia }}<br>
+                                            <span class="dia-semana">{{ get_dia_semana(year, month, dia) }}</span><br>
+                                            Almoço
+                                        </th>
+                                    {% endfor %}
+                                    <th>Saída</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for analista in analistas %}
+                                    <tr>
+                                        <td><strong>{{ analista.nome }}</strong></td>
+                                        <td>{{ escalas_analistas[analista.nome].entrada }}</td>
+                                        {% for dia in semana %}
+                                            <td>
+                                                {% if dia in folgas_analistas[analista.nome] %}
+                                                    <span class="badge bg-secondary">Folga</span>
+                                                {% else %}
+                                                    <span class="badge badge-horario">
+                                                        {{ escalas_analistas[analista.nome].almoco[dia-1] }}
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                        {% endfor %}
+                                        <td>{{ escalas_analistas[analista.nome].saida }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if not loop.last %}
+                        <hr class="semana-separator">
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Escala Técnicos -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2 class="mb-0">Escala Técnicos</h2>
+            </div>
+            <div class="card-body">
+                {% for semana in semanas %}
+                    <div class="table-responsive mb-4">
+                        <h4 class="text-danger mb-3">Semana {{ loop.index }}</h4>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Atividade</th>
+                                    <th>Entrada</th>
+                                    {% for dia in semana %}
+                                        <th>
+                                            {{ dia }}<br>
+                                            <span class="dia-semana">{{ get_dia_semana(year, month, dia) }}</span>
+                                        </th>
+                                    {% endfor %}
+                                    <th>Saída</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tecnico in tecnicos %}
+                                    <tr>
+                                        <td><strong>{{ tecnico.nome }}</strong></td>
+                                        <td class="atividade">{{ tecnico.atividade }}</td>
+                                        <td>{{ tecnico.entrada }}</td>
+                                        {% for dia in semana %}
+                                            <td>
+                                                {% if dia in folgas_tecnicos[tecnico.nome] %}
+                                                    <span class="badge bg-secondary">Folga</span>
+                                                {% else %}
+                                                    <span class="badge badge-horario">
+                                                        {{ tecnico.entrada }} às {{ tecnico.saida }}
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                        {% endfor %}
+                                        <td>{{ tecnico.saida }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% if not loop.last %}
+                        <hr class="semana-separator">
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Cobertura de Atividades -->
+        <div class="card mt-4">
+            <div class="card-header bg-info text-white">
+                <h2 class="mb-0">Cobertura de Atividades</h2>
+            </div>
+            <div class="card-body">
+                {% for semana in semanas %}
+                <div class="mb-4">
+                    <h4 class="text-info mb-3">Semana {{ loop.index }}</h4>
+                    {% for dia in semana %}
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Dia {{ dia }} ({{ get_dia_semana(year, month, dia) }})</h5>
+                            </div>
+                            <div class="card-body">
+                                {% for atividade in ['Email', 'Agibank'] %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary">{{ atividade }}</h6>
+                                        {% if cobertura_tecnicos[dia][atividade] %}
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-cobertura">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Técnico</th>
+                                                            <th>Manhã (Disponível)</th>
+                                                            <th>Horário de Almoço</th>
+                                                            <th>Tarde (Disponível)</th>
+                                                            <th>Total Horas Úteis</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for tecnico in cobertura_tecnicos[dia][atividade] %}
+                                                            {% set horarios = tecnico.disponibilidade %}
+                                                            <tr>
+                                                                <td>{{ tecnico.nome }}</td>
+                                                                <td>
+                                                                    <span class="periodo-disponivel">
+                                                                        {{ horarios.manha.inicio }} às {{ horarios.manha.fim }}
+                                                                    </span>
+                                                                </td>
+                                                                <td class="bg-light">
+                                                                    <span class="periodo-almoco">
+                                                                        {{ horarios.almoco.inicio }} às {{ horarios.almoco.fim }}
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <span class="periodo-disponivel">
+                                                                        {{ horarios.tarde.inicio }} às {{ horarios.tarde.fim }}
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    {{ calcular_horas_uteis(horarios) }}
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        {% else %}
+                                            <div class="alert alert-warning sem-cobertura">
+                                                Nenhum técnico disponível para cobrir esta atividade no dia {{ dia }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if not loop.last %}
+                    <hr class="semana-separator">
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
