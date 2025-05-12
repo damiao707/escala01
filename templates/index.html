@@ -144,16 +144,16 @@
                     <h3 class="text-danger">Analistas</h3>
                     {% for analista in analistas %}
                         <div class="mb-4">
-                            <h4 class="mb-3">{{ analista.nome }}</h4>
+                            <h4 class="mb-3">{{ analista['nome'] }}</h4>
                             <div class="d-flex flex-wrap">
                                 {% for dia in dias_com_semana %}
                                     <div class="form-check me-3 mb-2">
                                         <input class="form-check-input" type="checkbox"
-                                               id="folga_analista_{{ analista.nome }}_{{ dia.dia }}"
-                                               name="folga_analista_{{ analista.nome }}_{{ dia.dia }}"
-                                               {% if dia.dia in folgas_analistas[analista.nome] %}checked{% endif %}>
-                                        <label class="form-check-label" for="folga_analista_{{ analista.nome }}_{{ dia.dia }}">
-                                            {{ dia.dia }} ({{ dia.dia_semana }})
+                                               id="folga_analista_{{ analista['nome'] }}_{{ dia['dia'] }}"
+                                               name="folga_analista_{{ analista['nome'] }}_{{ dia['dia'] }}"
+                                               {% if dia['dia'] in folgas_analistas[analista['nome']] %}checked{% endif %}>
+                                        <label class="form-check-label" for="folga_analista_{{ analista['nome'] }}_{{ dia['dia'] }}">
+                                            {{ dia['dia'] }} ({{ dia['dia_semana'] }})
                                         </label>
                                     </div>
                                 {% endfor %}
@@ -165,16 +165,16 @@
                     <h3 class="text-danger mt-5">Técnicos</h3>
                     {% for tecnico in tecnicos %}
                         <div class="mb-4">
-                            <h4 class="mb-3">{{ tecnico.nome }} - {{ tecnico.atividade }}</h4>
+                            <h4 class="mb-3">{{ tecnico['nome'] }} - {{ tecnico['atividade'] }}</h4>
                             <div class="d-flex flex-wrap">
                                 {% for dia in dias_com_semana %}
                                     <div class="form-check me-3 mb-2">
                                         <input class="form-check-input" type="checkbox"
-                                               id="folga_tecnico_{{ tecnico.nome }}_{{ dia.dia }}"
-                                               name="folga_tecnico_{{ tecnico.nome }}_{{ dia.dia }}"
-                                               {% if dia.dia in folgas_tecnicos[tecnico.nome] %}checked{% endif %}>
-                                        <label class="form-check-label" for="folga_tecnico_{{ tecnico.nome }}_{{ dia.dia }}">
-                                            {{ dia.dia }} ({{ dia.dia_semana }})
+                                               id="folga_tecnico_{{ tecnico['nome'] }}_{{ dia['dia'] }}"
+                                               name="folga_tecnico_{{ tecnico['nome'] }}_{{ dia['dia'] }}"
+                                               {% if dia['dia'] in folgas_tecnicos[tecnico['nome']] %}checked{% endif %}>
+                                        <label class="form-check-label" for="folga_tecnico_{{ tecnico['nome'] }}_{{ dia['dia'] }}">
+                                            {{ dia['dia'] }} ({{ dia['dia_semana'] }})
                                         </label>
                                     </div>
                                 {% endfor %}
@@ -196,19 +196,19 @@
                             <h3 class="text-primary">Analistas</h3>
                             {% for analista in analistas %}
                                 <div class="config-horario">
-                                    <h5>{{ analista.nome }}</h5>
+                                    <h5>{{ analista['nome'] }}</h5>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label>Entrada</label>
                                             <input type="time" class="form-control"
-                                                   name="entrada_analista_{{ analista.nome }}"
-                                                   value="{{ analista.entrada }}">
+                                                   name="entrada_analista_{{ analista['nome'] }}"
+                                                   value="{{ analista['entrada'] }}">
                                         </div>
                                         <div class="col-md-6">
                                             <label>Saída</label>
                                             <input type="time" class="form-control"
-                                                   name="saida_analista_{{ analista.nome }}"
-                                                   value="{{ analista.saida }}">
+                                                   name="saida_analista_{{ analista['nome'] }}"
+                                                   value="{{ analista['saida'] }}">
                                         </div>
                                     </div>
                                 </div>
@@ -218,19 +218,19 @@
                             <h3 class="text-primary">Técnicos</h3>
                             {% for tecnico in tecnicos %}
                                 <div class="config-horario">
-                                    <h5>{{ tecnico.nome }} <small class="text-muted">{{ tecnico.atividade }}</small></h5>
+                                    <h5>{{ tecnico['nome'] }} <small class="text-muted">{{ tecnico['atividade'] }}</small></h5>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label>Entrada</label>
                                             <input type="time" class="form-control"
-                                                   name="entrada_tecnico_{{ tecnico.nome }}"
-                                                   value="{{ tecnico.entrada }}">
+                                                   name="entrada_tecnico_{{ tecnico['nome'] }}"
+                                                   value="{{ tecnico['entrada'] }}">
                                         </div>
                                         <div class="col-md-6">
                                             <label>Saída</label>
                                             <input type="time" class="form-control"
-                                                   name="saida_tecnico_{{ tecnico.nome }}"
-                                                   value="{{ tecnico.saida }}">
+                                                   name="saida_tecnico_{{ tecnico['nome'] }}"
+                                                   value="{{ tecnico['saida'] }}">
                                         </div>
                                     </div>
                                 </div>
@@ -278,20 +278,20 @@
                             <tbody>
                                 {% for analista in analistas %}
                                     <tr>
-                                        <td><strong>{{ analista.nome }}</strong></td>
-                                        <td>{{ escalas_analistas[analista.nome].entrada }}</td>
+                                        <td><strong>{{ analista['nome'] }}</strong></td>
+                                        <td>{{ escalas_analistas[analista['nome']]['entrada'] }}</td>
                                         {% for dia in semana %}
                                             <td>
-                                                {% if dia in folgas_analistas[analista.nome] %}
+                                                {% if dia in folgas_analistas[analista['nome']] %}
                                                     <span class="badge bg-secondary">Folga</span>
                                                 {% else %}
                                                     <span class="badge badge-horario">
-                                                        {{ escalas_analistas[analista.nome].almoco[dia-1] }}
+                                                        {{ escalas_analistas[analista['nome']]['almoco'][dia-1] }}
                                                     </span>
                                                 {% endif %}
                                             </td>
                                         {% endfor %}
-                                        <td>{{ escalas_analistas[analista.nome].saida }}</td>
+                                        <td>{{ escalas_analistas[analista['nome']]['saida'] }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -331,21 +331,21 @@
                             <tbody>
                                 {% for tecnico in tecnicos %}
                                     <tr>
-                                        <td><strong>{{ tecnico.nome }}</strong></td>
-                                        <td class="atividade">{{ tecnico.atividade }}</td>
-                                        <td>{{ tecnico.entrada }}</td>
+                                        <td><strong>{{ tecnico['nome'] }}</strong></td>
+                                        <td class="atividade">{{ tecnico['atividade'] }}</td>
+                                        <td>{{ tecnico['entrada'] }}</td>
                                         {% for dia in semana %}
                                             <td>
-                                                {% if dia in folgas_tecnicos[tecnico.nome] %}
+                                                {% if dia in folgas_tecnicos[tecnico['nome']] %}
                                                     <span class="badge bg-secondary">Folga</span>
                                                 {% else %}
                                                     <span class="badge badge-horario">
-                                                        {{ tecnico.entrada }} às {{ tecnico.saida }}
+                                                        {{ tecnico['entrada'] }} às {{ tecnico['saida'] }}
                                                     </span>
                                                 {% endif %}
                                             </td>
                                         {% endfor %}
-                                        <td>{{ tecnico.saida }}</td>
+                                        <td>{{ tecnico['saida'] }}</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -390,22 +390,22 @@
                                                     </thead>
                                                     <tbody>
                                                         {% for tecnico in cobertura_tecnicos[dia][atividade] %}
-                                                            {% set horarios = tecnico.disponibilidade %}
+                                                            {% set horarios = tecnico['disponibilidade'] %}
                                                             <tr>
-                                                                <td>{{ tecnico.nome }}</td>
+                                                                <td>{{ tecnico['nome'] }}</td>
                                                                 <td>
                                                                     <span class="periodo-disponivel">
-                                                                        {{ horarios.manha.inicio }} às {{ horarios.manha.fim }}
+                                                                        {{ horarios['manha']['inicio'] }} às {{ horarios['manha']['fim'] }}
                                                                     </span>
                                                                 </td>
                                                                 <td class="bg-light">
                                                                     <span class="periodo-almoco">
-                                                                        {{ horarios.almoco.inicio }} às {{ horarios.almoco.fim }}
+                                                                        {{ horarios['almoco']['inicio'] }} às {{ horarios['almoco']['fim'] }}
                                                                     </span>
                                                                 </td>
                                                                 <td>
                                                                     <span class="periodo-disponivel">
-                                                                        {{ horarios.tarde.inicio }} às {{ horarios.tarde.fim }}
+                                                                        {{ horarios['tarde']['inicio'] }} às {{ horarios['tarde']['fim'] }}
                                                                     </span>
                                                                 </td>
                                                                 <td>
